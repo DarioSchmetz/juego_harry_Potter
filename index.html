@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Juego de memoria de Harry Potter</title>
+  <style>
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      font-family: 'Arial', sans-serif;
+      background-image: url("img/harry-potter-fondo.jpg");
+      background-repeat: no-repeat;
+      background-size: cover;
+    }
+
+    h1 {
+      text-align: center;
+    }
+
+    #juego {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .carta {
+      width: 120px;
+      height: 180px;
+      margin: 5px;
+      cursor: pointer;
+      perspective: 1000px;
+      transition: transform 0.5s;
+      transform-style: preserve-3d;
+      background-color: #fff;
+      border: 1px solid #ccc;
+    }
+
+    .carta img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      backface-visibility: hidden;
+    }
+
+    .carta.volteada {
+      transform: rotateY(180deg);
+      background-color: #ccc;
+    }
+
+    .carta.oculta {
+      visibility: hidden;
+      transform: scale(0);
+    }
+
+    .boton-reiniciar {
+      margin-top: 20px;
+      padding: 10px;
+      font-size: 16px;
+      cursor: pointer;
+      display: none; /* Inicialmente oculto */
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Juego de memoria de Harry Potter</h1>
+
+  <div id="juego"></div>
+  <button class="boton-reiniciar" onclick="reiniciarJuego()">Reiniciar</button>
+
+  <script>
+   const imagenes = [
+  "harry.jpg", "harry.jpg",
+  "snape.jpg", "snape.jpg",
+  "hermione.jpg", "hermione.jpg",
+  "ron.jpg", "ron.jpg",
+  "albus.jpg", "albus.jpg"
+];
+
+    let cartasVolteadas = [];
+    let abiertas = 0;
+    let juegoIniciado = false;
+    let permitirVolteo = true;
+
+    function barajarCartas(imagenes) {
+      return imagenes
+        .map((imagen, index) => ({ orden: Math.random(), valor: imagen, index: index }))
+        .sort((a, b) => a.orden - b.orden)
+        .map((a) => a.valor);
+    }
+
+    function voltearCarta(carta) {
+      if (!juegoIniciado || !permitirVolteo) {
+        alert("Por favor, presiona el botón 'Jugar' para comenzar el juego o reiniciar.");
+        return;
+      }
+
+      if (!carta.classList.contains("volteada")) {
+        carta.classList.toggle("volteada");
+
+        if (cartasVolteadas.length === 1) {
+          permitirVolteo = false;
+
+          cartasVolteadas.push(carta);
+
+          setTimeout(() => {
+            if (cartasVolteadas[0].dataset.index === cartasVolteadas[1].dataset.index) {
+              cartasVolteadas[0].classList.add("oculta");
+              cartasVolteadas[1].classList.add("oculta");
+              abiertas++;
+
+              if (abiertas === imagenes.length / 2) {
+                alert("¡Has ganado!");
+                mostrarBotonReinicio();
+              }
+            } else {
+              cartasVolteadas[0].classList.remove("volteada");
+              cartasVolteadas[1].classList.remove("volteada");
+            }
+
+            cartasVolteadas = [];
+            permitirVolteo = true;
+          }, 1000);
+        } else {
+          cartasVolteadas[0] = carta;
+        }
+      }
+    }
+
+    function reiniciarJuego() {
+      ocultarBotonReinicio();
+      document.getElementById("juego").innerHTML = "";
+      abiertas = 0;
+      juegoIniciado = false;
+      permitirVolteo = true;
+      iniciarJuego();
+    }
+
+    function iniciarJuego() {
+      juegoIniciado = true;
+      const cartasBarajadas = barajarCartas(imagenes);
+      const juegoDiv = document.getElementById("juego");
+
+      cartasBarajadas.forEach((imagen, index) => {
+        const carta = document.createElement("div");
+        carta.classList.add("carta");
+        carta.dataset.index = index;
+        carta.onclick = () => voltearCarta(carta);
+
+        const imagenElement = document.createElement("img");
+        imagenElement.src = "img/" + imagen;
+        imagenElement.alt = "Carta";
+
+        carta.appendChild(imagenElement);
+        juegoDiv.appendChild(carta);
+      });
+    }
+    //
+    //COMPARAR, LA FUNCINCION INCIAR JUEGO, PROBLEMA PARA CARGAR LA IMAGENES. 
+//     function iniciarJuego() {
+//   const cartasBarajadas = barajarCartas(imagenes);
+//   const juegoDiv = document.getElementById("juego");
+
+//   cartasBarajadas.forEach((imagen, index) => {
+//     const carta = document.createElement("div");
+//     carta.classList.add("carta");
+//     carta.dataset.index = index;
+//     carta.onclick = () => voltearCarta(carta);
+
+//     const imagenElement = document.createElement("img");
+//     imagenElement.src = imagen;
+//     imagenElement.alt = "Carta";
+
+//     carta.appendChild(imagenElement);
+//     juegoDiv.appendChild(carta);
+//   });
+// }
+
+
+    function mostrarBotonReinicio() {
+      const botonReinicio = document.querySelector(".boton-reiniciar");
+      botonReinicio.style.display = "block";
+    }
+
+    function ocultarBotonReinicio() {
+      const botonReinicio = document.querySelector(".boton-reiniciar");
+      botonReinicio.style.display = "none";
+    }
+
+    document.addEventListener("DOMContentLoaded", iniciarJuego);
+  </script>
+</body>
+</html>
