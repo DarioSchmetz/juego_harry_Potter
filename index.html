@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Juego de memoria de Harry Potter</title>
+  <title>Juego de Memoria de Harry Potter</title>
   <style>
     body {
       display: flex;
@@ -11,9 +11,6 @@
       height: 100vh;
       margin: 0;
       font-family: 'Arial', sans-serif;
-      background-image: url("img/harry-potter-fondo.jpg");
-      background-repeat: no-repeat;
-      background-size: cover;
     }
 
     h1 {
@@ -34,8 +31,6 @@
       perspective: 1000px;
       transition: transform 0.5s;
       transform-style: preserve-3d;
-      background-color: #fff;
-      border: 1px solid #ccc;
     }
 
     .carta img {
@@ -47,7 +42,6 @@
 
     .carta.volteada {
       transform: rotateY(180deg);
-      background-color: #ccc;
     }
 
     .carta.oculta {
@@ -66,19 +60,19 @@
 </head>
 <body>
 
-  <h1>Juego de memoria de Harry Potter</h1>
+  <h1>Juego de Memoria de Harry Potter</h1>
 
   <div id="juego"></div>
   <button class="boton-reiniciar" onclick="reiniciarJuego()">Reiniciar</button>
 
   <script>
-   const imagenes = [
-  "harry.jpg", "harry.jpg",
-  "snape.jpg", "snape.jpg",
-  "hermione.jpg", "hermione.jpg",
-  "ron.jpg", "ron.jpg",
-  "albus.jpg", "albus.jpg"
-];
+    const imagenes = [
+      "harry.jpg", "harry.jpg",
+      "severus.jpg", "severus.jpg",
+      "hermione.jpg", "hermione.jpg",
+      "ron.jpg", "ron.jpg",
+      "albus.jpg", "albus.jpg"
+    ];
 
     let cartasVolteadas = [];
     let abiertas = 0;
@@ -131,11 +125,11 @@
     }
 
     function reiniciarJuego() {
-      ocultarBotonReinicio();
       document.getElementById("juego").innerHTML = "";
       abiertas = 0;
       juegoIniciado = false;
       permitirVolteo = true;
+      ocultarBotonReinicio();
       iniciarJuego();
     }
 
@@ -151,34 +145,13 @@
         carta.onclick = () => voltearCarta(carta);
 
         const imagenElement = document.createElement("img");
-        imagenElement.src = "img/" + imagen;
+        imagenElement.src = imagen;
         imagenElement.alt = "Carta";
 
         carta.appendChild(imagenElement);
         juegoDiv.appendChild(carta);
       });
     }
-    //
-    //COMPARAR, LA FUNCINCION INCIAR JUEGO, PROBLEMA PARA CARGAR LA IMAGENES. 
-//     function iniciarJuego() {
-//   const cartasBarajadas = barajarCartas(imagenes);
-//   const juegoDiv = document.getElementById("juego");
-
-//   cartasBarajadas.forEach((imagen, index) => {
-//     const carta = document.createElement("div");
-//     carta.classList.add("carta");
-//     carta.dataset.index = index;
-//     carta.onclick = () => voltearCarta(carta);
-
-//     const imagenElement = document.createElement("img");
-//     imagenElement.src = imagen;
-//     imagenElement.alt = "Carta";
-
-//     carta.appendChild(imagenElement);
-//     juegoDiv.appendChild(carta);
-//   });
-// }
-
 
     function mostrarBotonReinicio() {
       const botonReinicio = document.querySelector(".boton-reiniciar");
@@ -194,3 +167,4 @@
   </script>
 </body>
 </html>
+
