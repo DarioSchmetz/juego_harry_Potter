@@ -47,3 +47,18 @@ background-image: url(dario.jpg);
   cursor: pointer;
   display: none; /* Inicialmente oculto */
 }
+@media (max-width: 767px) {
+  /* Estilos para pantallas más pequeñas (celulares) */
+  body {
+      font-size: 1.2rem; /* Ajusta el tamaño de la fuente para pantallas más pequeñas */
+  }
+
+  .contenedorBusqueda input,
+  .contenedorBusqueda button {
+      width: 100%; /* Ajusta el ancho para ocupar toda la pantalla en dispositivos móviles */
+  }
+
+  #rp-q > div {
+      width: 100%; /* Ajusta el ancho para ocupar toda la pantalla en dispositivos móviles */
+      margin: 0 0 20px 0; /* Añade espacio entre los elementos */
+  }}
