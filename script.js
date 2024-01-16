@@ -1,105 +1,99 @@
-// Variables
-let cartas = [
-    { imagen: "harry.png", texto: "Harry Potter" },
-    { imagen: "hermione.png", texto: "Hermione Granger" },
-    { imagen: "ron.png", texto: "Ron Weasley" },
-    { imagen: "dumbledore.png", texto: "Albus Dumbledore" },
-    { imagen: "snape.png", texto: "Severus Snape" },
-    { imagen: "voldemort.png", texto: "Lord Voldemort" },
-  ];
-  
-  let cartasVolteadas = [];
-  let abiertas = 0;
-  let juegoIniciado = false;
-  
-  // Funciones
-  function crearCartas() {
-    for (let i = 0; i < cartas.length; i++) {
-      let carta = document.createElement("img");
-      carta.classList.add("carta");
-      carta.src = "img/back.jpg"; // Imagen de respaldo, asegúrate de tener esta imagen
-      carta.alt = cartas[i].texto;
-      carta.onclick = () => voltearCarta(carta);
-  
-      cartas[i].carta = carta;
-  
-      document.querySelector(".cartas").appendChild(carta);
-    }
-  }
-  
-  function barajarCartas(cartas) {
-    return cartas
-      .map((a) => ({ orden: Math.random(), valor: a }))
-      .sort((a, b) => a.orden - b.orden)
-      .map((a) => a.valor);
-  }
-  // ... (resto del código)
+
+  const imagenes = [
+  "harry.jpg", "harry.jpg",
+  "severus.jpg", "severus.jpg",
+  "hermione.jpg", "hermione.jpg",
+  "ron.jpg", "ron.jpg",
+  "albus.jpg", "albus.jpg"
+];
+
+let cartasVolteadas = [];
+let abiertas = 0;
+let juegoIniciado = false;
+let permitirVolteo = true;
+
+function barajarCartas(imagenes) {
+  return imagenes
+    .map((imagen, index) => ({ orden: Math.random(), valor: imagen, index: index }))
+    .sort((a, b) => a.orden - b.orden)
+    .map((a) => a.valor);
+}
 
 function voltearCarta(carta) {
-    if (!juegoIniciado) {
-      alert("Por favor, presiona el botón 'Jugar' para comenzar el juego.");
-      return;
-    }
-  
+  if (!juegoIniciado || !permitirVolteo) {
+    alert("Por favor, presiona el botón 'Jugar' para comenzar el juego o reiniciar.");
+    return;
+  }
+
+  if (!carta.classList.contains("volteada")) {
     carta.classList.toggle("volteada");
-  
+
     if (cartasVolteadas.length === 1) {
+      permitirVolteo = false;
+
       cartasVolteadas.push(carta);
-  
+
       setTimeout(() => {
-        if (cartasVolteadas[0].alt === cartasVolteadas[1].alt) {
-          cartasVolteadas[0].remove();
-          cartasVolteadas[1].remove();
+        if (cartasVolteadas[0].dataset.index === cartasVolteadas[1].dataset.index) {
+          cartasVolteadas[0].classList.add("oculta");
+          cartasVolteadas[1].classList.add("oculta");
           abiertas++;
-  
-          if (abiertas === cartas.length) {
+
+          if (abiertas === imagenes.length / 2) {
             alert("¡Has ganado!");
-            reiniciarJuego();
+            mostrarBotonReinicio();
           }
         } else {
           cartasVolteadas[0].classList.remove("volteada");
           cartasVolteadas[1].classList.remove("volteada");
         }
-  
+
         cartasVolteadas = [];
+        permitirVolteo = true;
       }, 1000);
     } else {
       cartasVolteadas[0] = carta;
     }
   }
-  
-  // ... (resto del código)
-  
-  
-  function reiniciarJuego() {
-    document.querySelector(".cartas").innerHTML = "";
-    abiertas = 0;
-    juegoIniciado = false;
-  }
-  
-  function iniciarJuego() {
-    const casaSeleccionada = document.getElementById("casas").value;
-    const imagenesCasa = cartas.filter((carta) => carta.imagen.includes(casaSeleccionada));
-  
-    if (imagenesCasa.length === cartas.length / 2) {
-      juegoIniciado = true;
-      const cartasBarajadas = barajarCartas(imagenesCasa);
-      const juegoDiv = document.querySelector(".cartas");
-      juegoDiv.innerHTML = ""; // Limpia el contenido anterior
-  
-      cartasBarajadas.forEach((carta) => {
-        juegoDiv.appendChild(carta.carta);
-      });
-  
-      setTimeout(() => {
-        juegoDiv.innerHTML = ""; // Oculta las cartas después de 10 minutos
-        juegoIniciado = false;
-      }, 600000); // 10 minutos en milisegundos
-    } else {
-      alert("Selecciona una casa antes de jugar.");
-    }
-  }
-  
-  // Eventos
-  document.addEventListener("DOMContentLoaded", crearCartas);
-  
+}
+
+function reiniciarJuego() {
+  document.getElementById("juego").innerHTML = "";
+  abiertas = 0;
+  juegoIniciado = false;
+  permitirVolteo = true;
+  ocultarBotonReinicio();
+  iniciarJuego();
+}
+
+function iniciarJuego() {
+  juegoIniciado = true;
+  const cartasBarajadas = barajarCartas(imagenes);
+  const juegoDiv = document.getElementById("juego");
+
+  cartasBarajadas.forEach((imagen, index) => {
+    const carta = document.createElement("div");
+    carta.classList.add("carta");
+    carta.dataset.index = index;
+    carta.onclick = () => voltearCarta(carta);
+
+    const imagenElement = document.createElement("img");
+    imagenElement.src = imagen;
+    imagenElement.alt = "Carta";
+
+    carta.appendChild(imagenElement);
+    juegoDiv.appendChild(carta);
+  });
+}
+
+function mostrarBotonReinicio() {
+  const botonReinicio = document.querySelector(".boton-reiniciar");
+  botonReinicio.style.display = "block";
+}
+
+function ocultarBotonReinicio() {
+  const botonReinicio = document.querySelector(".boton-reiniciar");
+  botonReinicio.style.display = "none";
+}
+
+document.addEventListener("DOMContentLoaded", iniciarJuego);
