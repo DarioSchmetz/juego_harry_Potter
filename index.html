@@ -3,57 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <title>Juego de Memoria de Harry Potter</title>
-  <style>
-   * {
-      background: linear-gradient(to right, #ffffff 25%, #000000 75%);
-  color: red;
-}
-    
-  h1 {
-background-image: url(dario.jpg);
-   } 
+  <link rel="stylesheet" href="estilo.css">
 
-
-    #juego {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-    }
-
-    .carta {
-      width: 120px;
-      height: 180px;
-      margin: 5px;
-      cursor: pointer;
-      perspective: 1000px;
-      transition: transform 0.5s;
-      transform-style: preserve-3d;
-    }
-
-    .carta img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      backface-visibility: hidden;
-    }
-
-    .carta.volteada {
-      transform: rotateY(180deg);
-    }
-
-    .carta.oculta {
-      visibility: hidden;
-      transform: scale(0);
-    }
-
-    .boton-reiniciar {
-      margin-top: 20px;
-      padding: 10px;
-      font-size: 16px;
-      cursor: pointer;
-      display: none; /* Inicialmente oculto */
-    }
-  </style>
 </head>
 <body>
 
